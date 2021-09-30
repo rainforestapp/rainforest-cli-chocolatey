@@ -87,7 +87,8 @@ FileUtils.mv(File.join('tmp', 'rainforest.exe'), File.join('rainforest-cli', 'to
 FileUtils.cp(File.join('LICENSE'), File.join('rainforest-cli', 'tools', 'LICENSE.txt'))
 FileUtils.rm_rf('tmp')
 
-exe_checksum = Gem::Platform.local.os == 'darwin' ? `md5sum rainforest-cli/tools/rainforest.exe` : `Get-FileHash rainforest-cli\tools\rainforest.exe`
+exe = File.join('rainforest-cli', 'tools', 'rainforest.exe')
+exe_checksum = Gem::Platform.local.os == 'darwin' ? `md5sum #{exe}` : `Get-FileHash #{exe}`
 
 File.write(File.join('rainforest-cli', 'tools', 'VERIFICATION.txt'), "
 VERIFICATION
