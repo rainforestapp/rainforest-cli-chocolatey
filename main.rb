@@ -158,9 +158,9 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
   end
 
   package.files do |files|
-    files.file(src: 'tools/rainforest.exe', target: 'rainforest.exe')
-    files.file(src: 'tools/LICENSE.txt', target: 'LICENSE.txt')
-    files.file(src: 'tools/VALIDATION.txt', target: 'VALIDATION.txt')
+    files.file(src: File.join('tools', 'rainforest.exe'), target: 'rainforest.exe')
+    files.file(src: File.join('tools', 'LICENSE.txt'), target: 'LICENSE.txt')
+    files.file(src: File.join('tools', 'VERIFICATION.txt'), target: 'VERIFICATION.txt')
   end
 end
 puts "✅"
