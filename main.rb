@@ -100,7 +100,7 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     metadata.tags('rainforest-cli rainforest')
     metadata.owners('@ukd1')
 
-    metadata.packageSourceUrl('https://github.com/rainforestapp/rainforest-cli/tree/master/chocolatey')
+    metadata.packageSourceUrl('https://github.com/rainforestapp/rainforest-cli-chocolatey')
     metadata.authors('https://github.com/rainforestapp/rainforest-cli/graphs/contributors')
     metadata.projectUrl('https://www.rainforestqa.com')
     metadata.iconUrl('https://assets.website-files.com/60da68c37e57671c365004bd/60da68c37e576749595005ae_favicon-large.svg')
