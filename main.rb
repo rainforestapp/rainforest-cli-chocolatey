@@ -97,11 +97,20 @@ print "- Moving LICENSE --> package "
 FileUtils.cp(File.join('LICENSE'), File.join('rainforest-cli', 'tools', 'LICENSE.txt'))
 puts "✅"
 
-exe = File.join('rainforest-cli', 'tools', 'rainforest.exe')
-cmd = (Gem::Platform.local.os == 'darwin' ? "md5sum #{exe}" : "Get-FileHash #{exe}")
-print "- Checksumming exe with '#{cmd}' "
-exe_checksum = `#{cmd}`
-puts "✅"
+exe = File.join(Dir.pwd, 'rainforest-cli', 'tools', 'rainforest.exe')
+if File.exists?(exe)
+  cmd = (Gem::Platform.local.os == 'darwin' ? "md5sum #{exe}" : "Get-FileHash #{exe}")
+  print "- Checksumming exe with '#{cmd}' "
+  exe_checksum = `#{cmd}`
+  puts "✅"
+else
+  puts "Can't find #{exe} 🧐"
+  puts " #{File.dirname(exe)}/*:"
+  Dir.glob(File.dirname(exe) + "/*").map {|f| puts "\t#{f}"}
+  puts
+  puts "👋🏻"
+  exit 1
+end
 
 print "- Writing VERIFICATION --> package "
 File.write(File.join('rainforest-cli', 'tools', 'VERIFICATION.txt'), "
