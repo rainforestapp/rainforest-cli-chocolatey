@@ -84,8 +84,23 @@ puts "Unzipping #{latest_release.windows_amd64_zip_name}"
 
 puts "Moving exe --> package"
 FileUtils.mv(File.join('tmp', 'rainforest.exe'), File.join('rainforest-cli', 'tools'))
-FileUtils.mv(File.join('tmp', 'LICENSE.txt'), File.join('rainforest-cli', 'tools'))
+FileUtils.cp(File.join('LICENSE'), File.join('rainforest-cli', 'tools', 'LICENSE.txt'))
 FileUtils.rm_rf('tmp')
+
+exe_checksum = Gem::Platform.local.os == 'darwin' ? `md5sum rainforest-cli/tools/rainforest.exe` : `Get-FileHash rainforest-cli\tools\rainforest.exe`
+
+File.write(File.join('rainforest-cli', 'tools', 'VERIFICATION.txt'), "
+VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+
+This package is published by the Rainforest QA itself. Any binaries will be identical to other package types published by the project, and can be built from source if you wish from https://github.com/rainforestapp/rainforest-cli or view the build artifacts directly from the releases page at https://github.com/rainforestapp/rainforest-cli/releases.
+
+Manually checking the expected checksum:
+Get-FileHash rainforest.exe
+
+Expected:
+#{exe_checksum}")
 
 puts "Making rainforest-cli.nuspec"
 # write the nuget
