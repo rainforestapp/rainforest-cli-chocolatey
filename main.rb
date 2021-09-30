@@ -84,6 +84,7 @@ puts "Unzipping #{latest_release.windows_amd64_zip_name}"
 
 puts "Moving exe --> package"
 FileUtils.mv(File.join('tmp', 'rainforest.exe'), File.join('rainforest-cli', 'tools'))
+FileUtils.mv(File.join('tmp', 'LICENSE.txt'), File.join('rainforest-cli', 'tools'))
 FileUtils.rm_rf('tmp')
 
 puts "Making rainforest-cli.nuspec"
