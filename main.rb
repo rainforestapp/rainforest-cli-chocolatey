@@ -3,10 +3,10 @@ require 'httparty'
 require 'json'
 require 'fileutils'
 
-raise "CHOCO_README.md is too long. Limit is 4000 chars for choco pacakges." if File.read('CHOCO_README.md').to_s.length > 4000
+raise "CHOCO_README.md is too long. Limit is 4000 chars for choco pacakges. 🤷‍♂️" if File.read('CHOCO_README.md').to_s.length > 4000
 
 res = HTTParty.get('https://api.github.com/repos/rainforestapp/rainforest-cli/releases')
-raise StandardError, "Error #{res.code} while fetching releases:\n#{res.body}" unless res.code == 200
+raise StandardError, "🚨 Error #{res.code} while fetching releases:\n#{res.body}" unless res.code == 200
 
 releases = JSON.parse(res.body)
 
@@ -62,34 +62,46 @@ end
 
 latest_release = Release.new(latest_release)
 
-puts "Building Chocolatey package for #{latest_release.version}"
-puts "\tFetching #{latest_release.windows_amd64_zip_name}"
+puts "Building 🍫 Chocolatey package for #{latest_release.version}"
 
-# fetch
-latest_release.download(latest_release.checksums)
-latest_release.download(latest_release.windows_amd64, get_checksum(latest_release.windows_amd64_zip_name))
+unless File.exists?(File.basename(latest_release.windows_amd64['browser_download_url']))
+  print "- Fetching release checksums "
+  latest_release.download(latest_release.checksums)
+  puts "✅"
 
-puts "\tDownloaded"
+  print "- Fetching #{latest_release.windows_amd64_zip_name} "
+  latest_release.download(latest_release.windows_amd64, get_checksum(latest_release.windows_amd64_zip_name))
+  puts "✅"
+else
+  puts "- Using cached archive - should only see this in dev 🧐"
+end
 
-puts
-puts "Setting up folders"
+print "- Setting up folders "
 # unzip, move
 FileUtils.rm_rf('tmp')
 FileUtils.rm_rf('rainforest-cli')
 FileUtils.mkdir_p('tmp')
 FileUtils.mkdir_p(File.join('rainforest-cli', 'tools'))
+puts "✅"
 
-puts "Unzipping #{latest_release.windows_amd64_zip_name}"
+print "- Unzipping #{latest_release.windows_amd64_zip_name} "
+print "\tunzip -n #{latest_release.windows_amd64_zip_name} -d tmp"
 `unzip -n #{latest_release.windows_amd64_zip_name} -d tmp`
+puts "✅"
 
-puts "Moving exe --> package"
+print "- Moving exe --> package "
 FileUtils.mv(File.join('tmp', 'rainforest.exe'), File.join('rainforest-cli', 'tools'))
+puts "✅"
+
+
+print "- Moving LICENSE --> package "
 FileUtils.cp(File.join('LICENSE'), File.join('rainforest-cli', 'tools', 'LICENSE.txt'))
-FileUtils.rm_rf('tmp')
+puts "✅"
 
 exe = File.join('rainforest-cli', 'tools', 'rainforest.exe')
 exe_checksum = Gem::Platform.local.os == 'darwin' ? `md5sum #{exe}` : `Get-FileHash #{exe}`
 
+print "- Writing VERIFICATION --> package "
 File.write(File.join('rainforest-cli', 'tools', 'VERIFICATION.txt'), "
 VERIFICATION
 Verification is intended to assist the Chocolatey moderators and community
@@ -102,8 +114,9 @@ Get-FileHash rainforest.exe
 
 Expected:
 #{exe_checksum}")
+puts "✅"
 
-puts "Making rainforest-cli.nuspec"
+print "- Making rainforest-cli.nuspec "
 # write the nuget
 builder = Builder::XmlMarkup.new(indent: 2)
 builder.instruct!(:xml, version: '1.0', encoding: 'UTF-8')
@@ -136,5 +149,8 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     files.file(src: 'tools/rainforest.exe', target: 'rainforest.exe')
   end
 end
+puts "✅"
 
 File.write(File.join('rainforest-cli', 'rainforest-cli.nuspec'), xml)
+
+puts "Done 👋🏻"
