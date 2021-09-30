@@ -99,7 +99,7 @@ puts "✅"
 
 exe = File.join(Dir.pwd, 'rainforest-cli', 'tools', 'rainforest.exe')
 if File.exists?(exe)
-  cmd = (Gem::Platform.local.os == 'darwin' ? "md5sum #{exe}" : "Get-FileHash #{exe}")
+  cmd = "md5sum #{exe}"
   print "- Checksumming exe with '#{cmd}' "
   exe_checksum = `#{cmd}`
   puts "✅"
