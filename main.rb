@@ -85,7 +85,6 @@ FileUtils.mkdir_p(File.join('rainforest-cli', 'tools'))
 puts "✅"
 
 print "- Unzipping #{latest_release.windows_amd64_zip_name} "
-print "\tunzip -n #{latest_release.windows_amd64_zip_name} -d tmp"
 `unzip -n #{latest_release.windows_amd64_zip_name} -d tmp`
 puts "✅"
 
@@ -99,7 +98,10 @@ FileUtils.cp(File.join('LICENSE'), File.join('rainforest-cli', 'tools', 'LICENSE
 puts "✅"
 
 exe = File.join('rainforest-cli', 'tools', 'rainforest.exe')
-exe_checksum = Gem::Platform.local.os == 'darwin' ? `md5sum #{exe}` : `Get-FileHash #{exe}`
+cmd = (Gem::Platform.local.os == 'darwin' ? "md5sum #{exe}" : "Get-FileHash #{exe}")
+print "- Checksumming exe with '#{cmd}' "
+exe_checksum = `#{cmd}`
+puts "✅"
 
 print "- Writing VERIFICATION --> package "
 File.write(File.join('rainforest-cli', 'tools', 'VERIFICATION.txt'), "
