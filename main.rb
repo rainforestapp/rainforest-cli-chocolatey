@@ -3,6 +3,8 @@ require 'httparty'
 require 'json'
 require 'fileutils'
 
+raise "CHOCO_README.md is too long. Limit is 4000 chars for choco pacakges." if File.read('CHOCO_README.md').to_s.length > 4000
+
 res = HTTParty.get('https://api.github.com/repos/rainforestapp/rainforest-cli/releases')
 raise StandardError, "Error #{res.code} while fetching releases:\n#{res.body}" unless res.code == 200
 
@@ -81,7 +83,7 @@ puts "Unzipping #{latest_release.windows_amd64_zip_name}"
 `unzip -n #{latest_release.windows_amd64_zip_name} -d tmp`
 
 puts "Moving exe --> package"
-FileUtils.mv(File.join('tmp', 'rainforest-cli.exe'), File.join('rainforest-cli', 'tools'))
+FileUtils.mv(File.join('tmp', 'rainforest.exe'), File.join('rainforest-cli', 'tools'))
 FileUtils.rm_rf('tmp')
 
 puts "Making rainforest-cli.nuspec"
@@ -91,7 +93,7 @@ builder.instruct!(:xml, version: '1.0', encoding: 'UTF-8')
 
 xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd') do |package|
   package.metadata do |metadata|
-    metadata.title('rainforest-cli')
+    metadata.title('Rainforest CLI')
     metadata.id('rainforest-cli')
     metadata.version(latest_release.version)
     metadata.summary('A command line interface to interact with Rainforest QA - https://www.rainforestqa.com/.')
@@ -109,12 +111,12 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     metadata.projectSourceUrl('https://github.com/rainforestapp/rainforest-cli')
     metadata.docsUrl('https://github.com/rainforestapp/rainforest-cli/blob/master/README.md')
     metadata.bugTrackerUrl('https://github.com/rainforestapp/rainforest-cli/issues')
-    metadata.description(File.read('../README.md').to_s[0..3999])
-    metadata.releaseNotes(File.read('../CHANGELOG.md').to_s[0..3999])
+    metadata.description(File.read('CHOCO_README.md').to_s)
+    # metadata.releaseNotes(File.read('../CHANGELOG.md').to_s[0..3999])
   end
 
   package.files do |files|
-    files.file(src: 'tools/rainforest-cli.exe', target: 'rainforest-cli.exe')
+    files.file(src: 'tools/rainforest.exe', target: 'rainforest.exe')
   end
 end
 
