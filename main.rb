@@ -136,8 +136,7 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
   package.metadata do |metadata|
     metadata.title('Rainforest CLI')
     metadata.id('rainforest-cli')
-    # metadata.version(latest_release.version)
-    metadata.version('2.22.2') # yes, ugh.
+    metadata.version(latest_release.version)
     metadata.summary('A command line interface to interact with Rainforest QA - https://www.rainforestqa.com/.')
     metadata.tags('rainforest-cli rainforest')
     metadata.owners('@ukd1')
