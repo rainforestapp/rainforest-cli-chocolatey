@@ -33,4 +33,4 @@ A command line interface to interact with [Rainforest QA](https://www.rainforest
 
 ## Support
 
-Email [help@rainforestqa.com](mailto:help@rainforestqa.com) if you're having trouble using the CLI or need help with integrating Rainforest in your CI or development workflow.
+Email `help[at]rainforestqa.com` if you're having trouble using the CLI or need help with integrating Rainforest in your CI or development workflow.
