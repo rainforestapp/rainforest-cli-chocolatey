@@ -29,6 +29,7 @@ jobs:
           choco pack
       -
         name: Choco Push
+        if: github.ref_name == 'main'
         run: |
           cd rainforest-cli/
           choco push @(gci *.nupkg)[0] --key $env:CHOCO_API_KEY --source https://push.chocolatey.org/
