@@ -145,7 +145,7 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     metadata.authors('https://github.com/rainforestapp/rainforest-cli/graphs/contributors')
     metadata.projectUrl('https://www.rainforestqa.com')
     metadata.iconUrl('https://assets.website-files.com/60da68c37e57671c365004bd/60da68c37e576749595005ae_favicon-large.svg')
-    metadata.copyright('2021 Rainforest QA, Inc')
+    metadata.copyright("#{Time.now.year} Rainforest QA, Inc")
 
     metadata.licenseUrl('https://github.com/rainforestapp/rainforest-cli/blob/master/LICENSE.txt')
     metadata.requireLicenseAcceptance(true)
