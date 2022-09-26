@@ -4,7 +4,7 @@ A command line interface to interact with [Rainforest QA](https://www.rainforest
 
 ## Global Options
 
-- `--token <your-rainforest-token>` - your API token if it's not set via the `RAINFOREST_API_TOKEN` environment variable
+- `--token [your-rainforest-token]` - your API token if it's not set via the `RAINFOREST_API_TOKEN` environment variable
 - `--skip-update` - Do not automatically check for CLI updates
 
 ## Options
@@ -29,7 +29,7 @@ A command line interface to interact with [Rainforest QA](https://www.rainforest
 - `--import-variable-name NAME` - Use with `run` and `--import-variable-csv-file` to upload new tabular variable values before your run to specify the name of your tabular variable.
 - `--single-use` - Use with `run` or `csv-upload` to flag your variable upload as `single-use`. See `--import-variable-csv-file` and `--import-variable-name` options as well.
 - `--disable-telemetry` stops the cli sharing information about which CI system you may be using, and where you host your git repo (i.e. your git remote). Rainforest uses this to better integrate with CI tooling, and code hosting companies, it is not sold or shared. Disabling this may affect your Rainforest experience.
-- `--max-reruns` - If set to a value > 0 and a test fails, the CLI will re-run failed tests a number of times before reporting failure. If `--junit-file <filename>` is also used, the JUnit reports of reruns will be saved under `<filename>.1`, `<filename>.2` etc.
+- `--max-reruns` - If set to a value greater than 0 and a test fails, the CLI will re-run failed tests a number of times before reporting failure. If `--junit-file [filename]` is also used, the JUnit reports of reruns will be saved under `[filename].1`, `[filename].2` etc.
 
 ## Support
 
