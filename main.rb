@@ -4,15 +4,13 @@ require 'json'
 require 'fileutils'
 
 raise "CHOCO_README.md is too long. Limit is 4000 chars for choco pacakges. 🤷‍♂️" if File.read('CHOCO_README.md').to_s.length > 4000
+version = ARGV[0] || 'latest'
+version = "tags/#{version}" unless version == 'latest'
 
-res = HTTParty.get('https://api.github.com/repos/rainforestapp/rainforest-cli/releases')
-raise StandardError, "🚨 Error #{res.code} while fetching releases:\n#{res.body}" unless res.code == 200
+res = HTTParty.get("https://api.github.com/repos/rainforestapp/rainforest-cli/releases/#{version}")
+raise StandardError, "🚨 Error #{res.code} while fetching release:\n#{res.body}" unless res.code == 200
 
-releases = JSON.parse(res.body)
-
-latest_release = releases.find do |release|
-  !release['draft'] && !release['prerelease']
-end
+latest_release = JSON.parse(res.body)
 
 
 class Release
