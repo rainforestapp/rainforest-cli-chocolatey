@@ -4,15 +4,13 @@ require 'json'
 require 'fileutils'
 
 raise "CHOCO_README.md is too long. Limit is 4000 chars for choco pacakges. 🤷‍♂️" if File.read('CHOCO_README.md').to_s.length > 4000
+version = ARGV[0] || 'latest'
+version = "tags/#{version}" unless version == 'latest'
 
-res = HTTParty.get('https://api.github.com/repos/rainforestapp/rainforest-cli/releases')
-raise StandardError, "🚨 Error #{res.code} while fetching releases:\n#{res.body}" unless res.code == 200
+res = HTTParty.get("https://api.github.com/repos/rainforestapp/rainforest-cli/releases/#{version}")
+raise StandardError, "🚨 Error #{res.code} while fetching release:\n#{res.body}" unless res.code == 200
 
-releases = JSON.parse(res.body)
-
-latest_release = releases.find do |release|
-  !release['draft'] && !release['prerelease']
-end
+release = JSON.parse(res.body)
 
 
 class Release
@@ -24,6 +22,10 @@ class Release
 
   def version
     @release['tag_name'][1..-1]
+  end
+
+  def notes
+    @release['body']
   end
 
   def windows_amd64_zip_name
@@ -60,17 +62,17 @@ def get_checksum(asset_name)
   end.split("  ")[0]
 end
 
-latest_release = Release.new(latest_release)
+release = Release.new(release)
 
-puts "Building 🍫 Chocolatey package for #{latest_release.version}"
+puts "Building 🍫 Chocolatey package for #{release.version}"
 
-unless File.exists?(File.basename(latest_release.windows_amd64['browser_download_url']))
+unless File.exists?(File.basename(release.windows_amd64['browser_download_url']))
   print "- Fetching release checksums "
-  latest_release.download(latest_release.checksums)
+  release.download(release.checksums)
   puts "✅"
 
-  print "- Fetching #{latest_release.windows_amd64_zip_name} "
-  latest_release.download(latest_release.windows_amd64, get_checksum(latest_release.windows_amd64_zip_name))
+  print "- Fetching #{release.windows_amd64_zip_name} "
+  release.download(release.windows_amd64, get_checksum(release.windows_amd64_zip_name))
   puts "✅"
 else
   puts "- Using cached archive - should only see this in dev 🧐"
@@ -84,8 +86,8 @@ FileUtils.mkdir_p('tmp')
 FileUtils.mkdir_p(File.join('rainforest-cli', 'tools'))
 puts "✅"
 
-print "- Unzipping #{latest_release.windows_amd64_zip_name} "
-`unzip -n #{latest_release.windows_amd64_zip_name} -d tmp`
+print "- Unzipping #{release.windows_amd64_zip_name} "
+`unzip -n #{release.windows_amd64_zip_name} -d tmp`
 puts "✅"
 
 print "- Moving exe --> package "
@@ -136,16 +138,15 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
   package.metadata do |metadata|
     metadata.title('Rainforest CLI')
     metadata.id('rainforest-cli')
-    metadata.version(latest_release.version)
+    metadata.version(release.version)
     metadata.summary('A command line interface to interact with Rainforest QA - https://www.rainforestqa.com/.')
     metadata.tags('rainforest-cli rainforest')
-    metadata.owners('@ukd1')
 
     metadata.packageSourceUrl('https://github.com/rainforestapp/rainforest-cli-chocolatey')
     metadata.authors('https://github.com/rainforestapp/rainforest-cli/graphs/contributors')
     metadata.projectUrl('https://www.rainforestqa.com')
     metadata.iconUrl('https://assets.website-files.com/60da68c37e57671c365004bd/60da68c37e576749595005ae_favicon-large.svg')
-    metadata.copyright('2021 Rainforest QA, Inc')
+    metadata.copyright("#{Time.now.year} Rainforest QA, Inc")
 
     metadata.licenseUrl('https://github.com/rainforestapp/rainforest-cli/blob/master/LICENSE.txt')
     metadata.requireLicenseAcceptance(true)
@@ -153,7 +154,7 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     metadata.docsUrl('https://github.com/rainforestapp/rainforest-cli/blob/master/README.md')
     metadata.bugTrackerUrl('https://github.com/rainforestapp/rainforest-cli/issues')
     metadata.description(File.read('CHOCO_README.md').to_s)
-    # metadata.releaseNotes(File.read('../CHANGELOG.md').to_s[0..3999])
+    metadata.releaseNotes(release.notes)
   end
 
   package.files do |files|
