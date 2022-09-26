@@ -139,7 +139,6 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     metadata.version(latest_release.version)
     metadata.summary('A command line interface to interact with Rainforest QA - https://www.rainforestqa.com/.')
     metadata.tags('rainforest-cli rainforest')
-    metadata.owners('@ukd1')
 
     metadata.packageSourceUrl('https://github.com/rainforestapp/rainforest-cli-chocolatey')
     metadata.authors('https://github.com/rainforestapp/rainforest-cli/graphs/contributors')
