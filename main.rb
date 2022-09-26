@@ -26,6 +26,10 @@ class Release
     @release['tag_name'][1..-1]
   end
 
+  def notes
+    @release['body']
+  end
+
   def windows_amd64_zip_name
     "rainforest-cli-#{version}-windows-amd64.zip"
   end
@@ -152,7 +156,7 @@ xml = builder.package(xmlns: 'http://schemas.microsoft.com/packaging/2015/06/nus
     metadata.docsUrl('https://github.com/rainforestapp/rainforest-cli/blob/master/README.md')
     metadata.bugTrackerUrl('https://github.com/rainforestapp/rainforest-cli/issues')
     metadata.description(File.read('CHOCO_README.md').to_s)
-    # metadata.releaseNotes(File.read('../CHANGELOG.md').to_s[0..3999])
+    metadata.releaseNotes(latest_release.notes)
   end
 
   package.files do |files|
