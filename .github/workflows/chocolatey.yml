@@ -5,7 +5,6 @@ on:
         description: CLI version to push to Chocolatey, e.g. v3.0.0
         required: false
         default: latest
-  push:
 jobs:
   chocolatey:
     runs-on: windows-latest
@@ -29,7 +28,6 @@ jobs:
           choco pack
       -
         name: Choco Push
-        if: github.ref_name == 'main'
         run: |
           cd rainforest-cli/
           choco push @(gci *.nupkg)[0] --key $env:CHOCO_API_KEY --source https://push.chocolatey.org/
