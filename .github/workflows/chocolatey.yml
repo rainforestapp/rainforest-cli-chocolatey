@@ -35,7 +35,7 @@ jobs:
           CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
       -
         name: Save Choco pacakge
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rainforest-cli.package
           path: rainforest-cli/*.nupkg
