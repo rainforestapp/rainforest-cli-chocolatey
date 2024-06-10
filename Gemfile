@@ -2,5 +2,5 @@
 
 source 'https://rubygems.org'
 
-gem 'builder', '~> 3.2', '>= 3.2.2'
+gem 'builder', '~> 3.3'
 gem 'httparty'
