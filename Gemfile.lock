@@ -1,14 +1,16 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bigdecimal (3.1.9)
     builder (3.3.0)
-    csv (3.3.0)
-    httparty (0.22.0)
+    csv (3.3.3)
+    httparty (0.23.1)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     mini_mime (1.1.5)
-    multi_xml (0.6.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
 
 PLATFORMS
   ruby
