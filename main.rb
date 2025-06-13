@@ -66,7 +66,7 @@ release = Release.new(release)
 
 puts "Building 🍫 Chocolatey package for #{release.version}"
 
-unless File.exists?(File.basename(release.windows_amd64['browser_download_url']))
+unless File.exist?(File.basename(release.windows_amd64['browser_download_url']))
   print "- Fetching release checksums "
   release.download(release.checksums)
   puts "✅"
@@ -100,7 +100,7 @@ FileUtils.cp(File.join('LICENSE'), File.join('rainforest-cli', 'tools', 'LICENSE
 puts "✅"
 
 exe = File.join(Dir.pwd, 'rainforest-cli', 'tools', 'rainforest.exe')
-if File.exists?(exe)
+if File.exist?(exe)
   cmd = "md5sum #{exe}"
   print "- Checksumming exe with '#{cmd}' "
   exe_checksum = `#{cmd}`
